@@ -39,7 +39,7 @@ A professional, machine learning–powered web app to detect phishing emails usi
 
 ## App Screenshot
 
-![App Screenshot](https://user-images.githubusercontent.com/yourusername/your-screenshot.png)
+![App Screenshot](images/ped-dashboard.png)
 
 ---
 
