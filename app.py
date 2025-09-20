@@ -73,17 +73,17 @@ if detect_btn and email_text.strip():
     X_char = char_vectorizer.transform([email_text])
     X_tfidf = hstack([X_word, X_char])
     # Predict
-    pred = stacked_model.predict(X_tfidf)
     probs = stacked_model.predict_proba(X_tfidf)[0]
-    pred_label = label_encoder.inverse_transform(pred)[0]
+    pred_label_index = np.argmax(probs)
+    pred_label = label_encoder.classes_[pred_label_index]
 
     # -- RESULT CARD --
     st.markdown("#### Detection Result")
     result_col, conf_col = st.columns([2,1])
     with result_col:
-        if pred_label.lower() == "phishing":
+        if pred_label == "Phishing Email":
             st.error(
-                "🚨 **Phishing Email Detected!**",
+                "**Phishing Email Detected!**",
                 icon="🚨"
             )
             st.markdown(
@@ -92,7 +92,7 @@ if detect_btn and email_text.strip():
             )
         else:
             st.success(
-                "✅ **No Phishing Detected**",
+                "**No Phishing Detected**",
                 icon="✅"
             )
             st.markdown(
@@ -102,15 +102,15 @@ if detect_btn and email_text.strip():
     with conf_col:
         st.markdown("##### Confidence")
         for idx, class_name in enumerate(label_encoder.classes_):
-            bar_color = "#e74c3c" if class_name.lower() == "phishing" else "#27ae60"
+            bar_color = "#e74c3c" if class_name == "Phishing Email" else "#27ae60"
             st.markdown(
                 f"<div style='margin-bottom:8px;'>"
-                f"<strong>{class_name.title()}:</strong> "
+                f"<strong>{class_name}:</strong> "
                 f"<span style='color:{bar_color};font-weight:bold;'>{probs[idx]*100:.2f}%</span>"
                 f"</div>",
                 unsafe_allow_html=True,
             )
-            st.progress(float(probs[idx]), text=class_name.title())
+            st.progress(float(probs[idx]), text=class_name)
 
     # -- SUGGESTIONS/EXTRA INFO --
     st.markdown("---")
